@@ -1,0 +1,19 @@
+{
+  "name": "ai-coloring-page-generator",
+  "version": "1.0.0",
+  "description": "AI-powered coloring page generator that converts images to black-and-white outlines",
+  "main": "server/index.js",
+  "scripts": {
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "cd server && npm run dev",
+    "client": "cd client && npm start",
+    "build": "cd client && npm run build",
+    "install-all": "npm install && cd server && npm install && cd ../client && npm install"
+  },
+  "keywords": ["ai", "coloring", "image-processing", "openai", "react", "nodejs"],
+  "author": "AI Coloring Page Generator",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+} 

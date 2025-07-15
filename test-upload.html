@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test AI Processing</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .container { max-width: 800px; margin: 0 auto; }
+        .upload-area { border: 2px dashed #ccc; padding: 20px; text-align: center; margin: 20px 0; }
+        .preview { margin: 20px 0; }
+        .preview img { max-width: 300px; border: 1px solid #ccc; }
+        .status { padding: 10px; margin: 10px 0; border-radius: 5px; }
+        .status.success { background-color: #d4edda; color: #155724; }
+        .status.error { background-color: #f8d7da; color: #721c24; }
+        .status.processing { background-color: #fff3cd; color: #856404; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>AI Coloring Page Generator - Test</h1>
+        
+        <div class="upload-area" id="uploadArea">
+            <p>Drop an image here or click to select</p>
+            <input type="file" id="fileInput" accept="image/*" style="display: none;">
+        </div>
+        
+        <div id="status"></div>
+        
+        <div class="preview" id="preview" style="display: none;">
+            <h3>Original Image:</h3>
+            <img id="originalImage" alt="Original">
+            
+            <h3>AI Processed Image:</h3>
+            <img id="processedImage" alt="Processed">
+        </div>
+    </div>
+
+    <script>
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        const status = document.getElementById('status');
+        const preview = document.getElementById('preview');
+        const originalImage = document.getElementById('originalImage');
+        const processedImage = document.getElementById('processedImage');
+
+        uploadArea.addEventListener('click', () => fileInput.click());
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.style.borderColor = '#007bff';
+        });
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.style.borderColor = '#ccc';
+        });
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.style.borderColor = '#ccc';
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                handleFile(files[0]);
+            }
+        });
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                handleFile(e.target.files[0]);
+            }
+        });
+
+        function handleFile(file) {
+            if (!file.type.startsWith('image/')) {
+                showStatus('Please select an image file', 'error');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('image', file);
+
+            showStatus('Uploading and processing image...', 'processing');
+
+            fetch('http://localhost:5001/upload-image', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showStatus('Processing completed successfully!', 'success');
+                    
+                    // Display images
+                    originalImage.src = `http://localhost:5001${data.originalImage}`;
+                    processedImage.src = `http://localhost:5001${data.processedImage}`;
+                    preview.style.display = 'block';
+                    
+                    console.log('Response:', data);
+                } else {
+                    showStatus(`Error: ${data.error}`, 'error');
+                }
+            })
+            .catch(error => {
+                showStatus(`Error: ${error.message}`, 'error');
+                console.error('Error:', error);
+            });
+        }
+
+        function showStatus(message, type) {
+            status.innerHTML = `<div class="status ${type}">${message}</div>`;
+        }
+    </script>
+</body>
+</html> 
