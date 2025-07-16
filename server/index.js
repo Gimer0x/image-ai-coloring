@@ -133,7 +133,7 @@ async function processImageWithAI(imagePath, imageId) {
             content: [
               {
                 type: "text",
-                text: "Analyze this image and describe what you see in detail. Focus on the main subjects, objects, shapes, and composition that would work well as a coloring book outline. Pay special attention to facial features, expressions, and important details that give character to the subject. Emphasize clear shapes, simple forms, and distinct outlines that children could easily color. Include specific details about eyes, nose, mouth, hair, and facial expressions. Avoid complex textures or detailed patterns that might be difficult to convert to simple line drawings."
+                text: "Analyze this image and describe what you see in detail. Focus on the main subjects, objects, shapes, and composition that would work well as a Studio Ghibli-style coloring book outline. Pay special attention to facial features, expressions, and important details that give character to the subject. Look for elements that could be enhanced with Ghibli's whimsical, magical style - soft shapes, flowing lines, and charming details. Emphasize clear shapes, simple forms, and distinct outlines that children could easily color. Include specific details about eyes, nose, mouth, hair, and facial expressions. Avoid complex textures or detailed patterns that might be difficult to convert to simple line drawings."
               },
               {
                 type: "image_url",
@@ -158,7 +158,15 @@ async function processImageWithAI(imagePath, imageId) {
     const generationResponse = await Promise.race([
       openai.images.generate({
         model: "dall-e-3",
-        prompt: `Create a pure black and white line drawing outline for a children's coloring book based on this description: "${imageDescription}". 
+        prompt: `Create a pure black and white line drawing outline for a children's coloring book in Studio Ghibli style based on this description: "${imageDescription}". 
+
+STYLE REQUIREMENTS:
+- Studio Ghibli anime/manga style with soft, flowing lines
+- Whimsical and charming character design
+- Gentle, expressive facial features typical of Ghibli characters
+- Organic, natural shapes and forms
+- Soft, rounded edges and smooth curves
+- Magical and dreamy atmosphere
 
 CRITICAL REQUIREMENTS:
 - Use ONLY solid black lines on pure white background
@@ -178,7 +186,7 @@ FACIAL DETAILS REQUIREMENTS:
 - Keep facial features simple but expressive
 - Ensure face has character and personality
 
-The result should look exactly like a traditional coloring book page with clear, bold black outlines that children can easily color within, including all important facial details.`,
+The result should look like a Studio Ghibli-inspired coloring book page with clear, bold black outlines that children can easily color within, including all important facial details.`,
         n: 1,
         size: "1024x1024",
         response_format: "url"
