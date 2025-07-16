@@ -133,7 +133,7 @@ async function processImageWithAI(imagePath, imageId) {
             content: [
               {
                 type: "text",
-                text: "Analyze this image and describe what you see in detail. Focus on the main subjects, objects, shapes, and composition. This description will be used to create a coloring book outline."
+                text: "Analyze this image and describe what you see in detail. Focus on the main subjects, objects, shapes, and composition that would work well as a coloring book outline. Pay special attention to facial features, expressions, and important details that give character to the subject. Emphasize clear shapes, simple forms, and distinct outlines that children could easily color. Include specific details about eyes, nose, mouth, hair, and facial expressions. Avoid complex textures or detailed patterns that might be difficult to convert to simple line drawings."
               },
               {
                 type: "image_url",
@@ -158,7 +158,27 @@ async function processImageWithAI(imagePath, imageId) {
     const generationResponse = await Promise.race([
       openai.images.generate({
         model: "dall-e-3",
-        prompt: `Create a black and white line drawing outline for a children's coloring book based on this description: "${imageDescription}". The result should be a simple, clean outline with bold black lines on a pure white background. No colors, no shading, no grayscale - just clear black outlines that a child could color in. Make it look exactly like a traditional coloring book page with clean, simple shapes.`,
+        prompt: `Create a pure black and white line drawing outline for a children's coloring book based on this description: "${imageDescription}". 
+
+CRITICAL REQUIREMENTS:
+- Use ONLY solid black lines on pure white background
+- NO grayscale, NO shading, NO shadows, NO gradients
+- NO filled areas or black blocks - only outline lines
+- Lines should be clean, bold, and continuous
+- Background must be completely white (no gray areas)
+- Style should be simple and child-friendly
+- Avoid any areas filled with black color
+- Create open spaces that children can color in
+
+FACIAL DETAILS REQUIREMENTS:
+- Include clear facial features: eyes, nose, mouth, eyebrows
+- Draw simple but recognizable facial expressions
+- Add basic hair outline and style
+- Include ears if visible
+- Keep facial features simple but expressive
+- Ensure face has character and personality
+
+The result should look exactly like a traditional coloring book page with clear, bold black outlines that children can easily color within, including all important facial details.`,
         n: 1,
         size: "1024x1024",
         response_format: "url"
